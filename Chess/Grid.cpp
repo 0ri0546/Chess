@@ -1,5 +1,6 @@
 #include "Grid.hpp"
 
+// Initialise l’échiquier
 void Grid::reset()
 {
     board.fill(Piece::None);
@@ -34,4 +35,30 @@ Piece Grid::get(int x, int y) const
 void Grid::set(int x, int y, Piece piece)
 {
     board[y * SIZE + x] = piece;
+}
+
+void Grid::handleClick(const sf::Vector2i& mousePos)
+{
+    sf::Vector2i cell = mouseToCell(mousePos);
+    if (cell.x == -1) return;
+
+    // Sélection d’une pièce
+    if (selectedX == -1)
+    {
+        if (get(cell.x, cell.y) != Piece::None)
+        {
+            selectedX = cell.x;
+            selectedY = cell.y;
+        }
+    }
+    // Déplacement
+    else
+    {
+        Piece p = get(selectedX, selectedY);
+        set(selectedX, selectedY, Piece::None);
+        set(cell.x, cell.y, p);
+
+        selectedX = -1;
+        selectedY = -1;
+    }
 }

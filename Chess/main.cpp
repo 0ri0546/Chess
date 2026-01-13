@@ -5,15 +5,20 @@ int main()
 {
     Grid grid;
     grid.reset();
-    sf::RenderWindow window(sf::VideoMode({ 1080, 1080 }), "SFML works!");
+
+    sf::RenderWindow window(sf::VideoMode({ Grid::SIZE * Grid::TILE_SIZE,
+        Grid::SIZE * Grid::TILE_SIZE }),
+        "SFML Chess");
 
     while (window.isOpen())
     {
-        while (const std::optional event = window.pollEvent())
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
-            if (event->is<sf::Event::Closed>())
-                window.close();
+            grid.handleClick(sf::Mouse::getPosition(window));
+            sf::sleep(sf::milliseconds(150)); // petit délai pour éviter les multiples clics
         }
+
+        if (!window.isOpen()) break; // permet de quitter
 
         window.clear();
         grid.draw(window);
